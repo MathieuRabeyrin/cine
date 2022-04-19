@@ -232,7 +232,8 @@ export default {
 
     h2 {
         color: #fff;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
+        font-size: 3rem;
     }
 
     #app {
