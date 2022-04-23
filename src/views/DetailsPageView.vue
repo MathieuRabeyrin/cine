@@ -148,7 +148,7 @@ export default {
     
 }
 </script>
-<style>
+<style scoped>
     .video-player {
         margin-top: 4rem;
     }
@@ -357,12 +357,6 @@ export default {
         color: #fff;
         margin-bottom: 2rem;
         font-size: 3rem;
-    }
-
-    #app {
-        background-color: #1F2025;
-        display: grid;
-        grid-template-columns: 15% 65% 20%;
     }
 
     nav h3 {
