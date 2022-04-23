@@ -7,9 +7,14 @@ const routes = [
         component: () => import('../views/LandingPageView.vue')
     },
     {
-      path: '/registration',
-      name: 'RegistrationPageView',
-      component: () => import('../views/RegistrationPageView.vue')
+        path: '/registration',
+        name: 'RegistrationPageView',
+        component: () => import('../views/RegistrationPageView.vue')
+    },
+    {
+        path: '/details/:id',
+        name: 'DetailsPageView',
+        component: () => import('../views/DetailsPageView.vue')
     }
 ]
 

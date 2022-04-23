@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin-top: 2rem; margin-left: 4rem;">
         <h1>Ciné<span style="color: red;">+</span></h1>
         <nav>
             <section>
@@ -29,40 +29,37 @@
         </nav>
     </div>
     <main>
-        <h2>Bienvenu sur votre espace</h2>
-        <figure class="main-card">
-            <video src="../assets/testvideo.mp4" autoplay loop class="main-img" muted></video>
-            <!-- <img :src="setUrl" alt="" class="main-img"> -->
-            <figcaption class="main-content">
-                <h4>{{ movie.original_title }}</h4>
-                <p>Action, Adventure</p>
-                <button>En Savoir Plus</button>
+        <figure>
+            <img :src="setUrl" alt="">
+            <figcaption>
+                <h2>{{ movie.title }}</h2>
+                <p>{{ movie.overview }}</p>
+                <ul class="genre">
+                    <li v-for="genre in movie.genres" :key="genre.id">
+                        <a href="#">{{ genre.name }}</a>
+                    </li>
+                </ul>
             </figcaption>
         </figure>
-        <article>
-            <h3>Trending</h3>
-            <ul>
-                <li v-for="i in movies" :key="i.id">
-                    <router-link 
-                        :to="'/details/' + i.id"
-                    >
-                        <figure>
-                            <img :src="setCustomUrl(i.poster_path)" alt="">
-                        </figure>
-                    </router-link>
+        <section>
+            <div class="heading">
+                <h3>Cast</h3>
+                <div class="chevron-group">
+                    <div class="left"></div>
+                    <div class="right"></div>
+                </div>
+            </div>
+            <ul class="cast">
+                <li v-for="cast in credits" :key="cast.id">
+                    <img :src="setCustomUrl(cast.profile_path)" alt="">
+                    <p>{{ cast.name }}</p>
                 </li>
             </ul>
-        </article>
-        <article class="test">
-            <h3>Continue Watching</h3>
-            <ul>
-                <li v-for="i in movies2" :key="i.id">
-                    <figure>
-                        <img :src="setCustomUrl(i.poster_path)" alt="">
-                    </figure>
-                </li>
-            </ul>
-        </article>
+        </section>
+        <section v-for="i in video" :key="i.id" class="video-player">
+            <h3>{{ i.name }}</h3>
+            <iframe :src="setVideoUrl(i.key)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </section>
     </main>
     <aside>
         <input type="search" placeholder="Search" class="search-input">
@@ -106,25 +103,34 @@
 export default {
     data() {
         return {
+            moveId: this.$route.params.id,
             movie: {},
-            movies: [],
             favs: [],
             favs2: [],
-            movies2: []
+            credits: {},
+            video: []
         }
     },
     async created() {
-        const response = await fetch("https://api.themoviedb.org/3/movie/63223?api_key=cfd28171c3e2ccd8fdb64b5a8e13a97d")
-        const data = await response.json()
-        this.movie = data
-
         const a = await fetch("https://api.themoviedb.org/3/trending/movie/day?api_key=cfd28171c3e2ccd8fdb64b5a8e13a97d")
         const d = await a.json()
-        this.movies = d.results.slice(4, 8)
-        console.log(this.movie)
         this.favs = d.results.slice(10, 13)
         this.favs2 = d.results.slice(15, 18)
-        this.movies2 = d.results.slice(0, 3)
+
+        const c = await fetch(`https://api.themoviedb.org/3/movie/${this.moveId}?api_key=cfd28171c3e2ccd8fdb64b5a8e13a97d`)
+        const data = await c.json()
+        this.movie = data
+        console.log(data)
+
+        const z = await fetch(`https://api.themoviedb.org/3/movie/${this.moveId}/credits?api_key=cfd28171c3e2ccd8fdb64b5a8e13a97d`)
+        const o = await z.json()
+        this.credits = o.cast.slice(0, 6)
+        console.log(o)
+
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${this.moveId}/videos?api_key=cfd28171c3e2ccd8fdb64b5a8e13a97d`)
+        const ok = await response.json()
+        this.video = ok.results.slice(0, 3)
+        console.log(this.video)
     },
     computed: {
         setUrl() {
@@ -134,11 +140,124 @@ export default {
     methods: {
         setCustomUrl(url) {
             return `https://image.tmdb.org/t/p/original/${url}`
+        },
+        setVideoUrl(key) {
+            return `https://www.youtube.com/embed/${key}`
         }
     }
+    
 }
 </script>
 <style>
+    .video-player {
+        margin-top: 4rem;
+    }
+
+    .video-player h3 {
+        margin-bottom: 1rem;
+    }
+
+    iframe {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+    }
+
+    .heading {
+        display: flex;
+        align-items: center;
+        margin-top: 4rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .chevron-group {
+        display: flex;
+        margin-left: auto;
+    }
+
+    .left {
+        background: url("../assets/chevron-left.svg");
+    }
+
+    .right {
+        background: url("../assets/chevron-right.svg");
+        margin-left: 1rem;
+    }
+
+    .left, .right {
+        width: 40px;
+        height: 40px;
+        border: solid 1px #32333b;
+        border-radius: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+    }
+
+    .cast {
+        display: flex;
+        overflow: hidden;
+    }
+
+    .cast li {
+        flex: 0 0 20%;
+    }
+
+    .cast img {
+        object-fit: cover;
+        height: 25rem;
+        padding: .30rem;
+        width: 100%;
+    }
+
+    h3 {
+        color: #fff;
+    }
+
+    .cast li {
+        color: #696969;
+    }
+
+    main img {
+        height: 50rem;
+        border-radius: 1rem;
+    }
+
+    main figure {
+        display: flex;
+        margin-top: 2rem;
+    }
+
+    .genre {
+        display: flex;
+        margin-top: auto;
+    }
+
+    .genre li {
+        margin-right: 1rem;
+    }
+
+    main figure figcaption {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    main figcaption h2 {
+        margin: 0;
+    }
+
+    main figcaption p {
+        color: #696972;
+        margin-top: 1.5rem;
+    }
+
+    main figure a {
+        border: solid 1px #32333b;
+        border-radius: 1rem;
+        padding: 1rem;
+        display: block;
+    }
+
     body {
         overflow: hidden;
     }
@@ -246,11 +365,6 @@ export default {
         grid-template-columns: 15% 65% 20%;
     }
 
-    #app div {
-        margin-top: 3rem;
-        margin-left: 5rem;
-    }
-
     nav h3 {
         color: #696972;
         text-transform: uppercase;
@@ -268,63 +382,5 @@ export default {
         border-right: solid 1px #32333b;
         height: 100vh;
         overflow-y: scroll;
-    }
-
-    .main-card {
-        height: 30rem;
-        margin: 0;
-        position: relative;
-    }
-
-    .main-img {
-        height: 100%;
-        width: 100%;
-        border-radius: 1rem;
-        object-fit: cover;
-    }
-
-    .main-content {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        padding: 2rem;
-        text-shadow: 0px 1px 5px black;
-    }
-
-    .main-content h4 {
-        color: #fff;
-    }
-
-    .main-content p {
-        color: #fff;
-        margin: 0.5rem 0;
-    }
-
-    .main-content button {
-        background-color: red;
-        color: #fff;
-        padding: 1rem;
-        border-radius: 1rem;
-    }
-
-    main h3 {
-        margin-top: 4rem;
-        margin-bottom: 2rem;
-        color: #fff;
-    }
-
-    article ul {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        column-gap: 1rem;
-    }
-
-    article img {
-        width: 100%;
-        border-radius: 1rem;
-    }
-
-    .test ul {
-        grid-template-columns: repeat(3, 1fr);
     }
 </style>
