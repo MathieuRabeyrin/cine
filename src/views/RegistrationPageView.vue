@@ -211,6 +211,7 @@ export default {
         padding: 1.5rem 2rem;
         margin-bottom: 3.5rem;
         width: 100%;
+        color: #fff;
     }
 
     nav {

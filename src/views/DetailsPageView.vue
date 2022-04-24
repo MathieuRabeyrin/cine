@@ -34,6 +34,13 @@
             <figcaption>
                 <h2>{{ movie.title }}</h2>
                 <p>{{ movie.overview }}</p>
+                <ul class="info">
+                    <li>Release: <span>{{ movie.release_date }}</span></li>
+                    <li>Buget: <span>{{ movie.budget }}$</span></li>
+                    <li>Revenue: <span>{{ movie.revenue }}$</span></li>
+                    <li>Rating: <span>{{ movie.vote_average }}/10</span></li>
+                    <li>Homepage: <a :href="movie.homepage" target="_blank"><span>{{ movie.homepage }}</span></a></li>
+                </ul>
                 <ul class="genre">
                     <li v-for="genre in movie.genres" :key="genre.id">
                         <a href="#">{{ genre.name }}</a>
@@ -149,6 +156,23 @@ export default {
 }
 </script>
 <style scoped>
+    .info {
+        margin-top: 2rem;
+    }
+
+    .info li{
+        color: #696972;
+        margin: 1rem 0;
+    }
+
+    .info span {
+        color: #fff;
+    }
+
+    .info a {
+        text-transform: inherit;
+    }
+
     .video-player {
         margin-top: 4rem;
     }
@@ -251,7 +275,7 @@ export default {
         margin-top: 1.5rem;
     }
 
-    main figure a {
+    .genre a {
         border: solid 1px #32333b;
         border-radius: 1rem;
         padding: 1rem;
@@ -330,6 +354,7 @@ export default {
         padding: 1.5rem 2rem;
         margin-bottom: 3.5rem;
         width: 100%;
+        color: #fff;
     }
 
     nav {
