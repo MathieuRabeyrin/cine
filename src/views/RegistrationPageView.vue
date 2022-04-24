@@ -241,17 +241,6 @@ export default {
         font-size: 3rem;
     }
 
-    #app {
-        background-color: #1F2025;
-        display: grid;
-        grid-template-columns: 15% 65% 20%;
-    }
-
-    #app div {
-        margin-top: 3rem;
-        margin-left: 5rem;
-    }
-
     nav h3 {
         color: #696972;
         text-transform: uppercase;

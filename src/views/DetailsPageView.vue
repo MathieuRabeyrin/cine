@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-top: 2rem; margin-left: 4rem;">
+    <div>
         <h1>Ciné<span style="color: red;">+</span></h1>
         <nav>
             <section>
